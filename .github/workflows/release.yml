@@ -24,7 +24,7 @@ jobs:
         with:
           repository: shunliz/career-assistant
           token: ${{ secrets.MAIN_REPO_TOKEN }}
-          ref: ${{ github.event.client-payload.version }}
+          ref: ${{ github.event.client_payload.version }}
           path: ./career-assistant
       - uses: actions/setup-node@v6
         with: { node-version: 22 }
@@ -50,13 +50,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -f ${{ github.event.client-payload.version }} HEAD
-          git push origin ${{ github.event.client-payload.version }} --force
+          git tag -f ${{ github.event.client_payload.version }} HEAD
+          git push origin ${{ github.event.client_payload.version }} --force
       - uses: actions/download-artifact@v8
         with: { path: ./dist }
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.client-payload.version }}
+          tag_name: ${{ github.event.client_payload.version }}
           draft: false
           files: |
             dist/**/career-assistant-*.exe

@@ -44,6 +44,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Move tag to current HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f ${{ github.event.client-payload.version }} HEAD
+          git push origin ${{ github.event.client-payload.version }} --force
       - uses: actions/download-artifact@v8
         with: { path: ./dist }
       - uses: softprops/action-gh-release@v2

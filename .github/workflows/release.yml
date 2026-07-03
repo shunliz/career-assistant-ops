@@ -2,6 +2,7 @@ name: Build and release
 on:
   repository_dispatch:
     types: [electron-release]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:

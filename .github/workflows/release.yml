@@ -25,8 +25,11 @@ jobs:
       - uses: actions/setup-node@v6
         with: { node-version: 22 }
       - run: npm ci
-      - run: npm run build:${{ matrix.build_cmd }}
-        env: { GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
+      - name: Build
+        env:
+          BUILD_SCRIPT: ${{ matrix.build_cmd }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build:$BUILD_SCRIPT
       - uses: actions/upload-artifact@v7
         with:
           name: dist-${{ matrix.os }}

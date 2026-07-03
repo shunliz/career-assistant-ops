@@ -66,6 +66,7 @@ jobs:
           files: |
             dist/**/career-assistant-*.exe
             dist/**/career-assistant-*.dmg
+            dist/**/latest.yml
             dist/**/latest-mac.yml
             dist/**/latest-windows.yml
         env:

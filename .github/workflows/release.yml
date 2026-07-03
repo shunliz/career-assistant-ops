@@ -11,6 +11,7 @@ jobs:
     defaults:
       run:
         working-directory: ./career-assistant
+        shell: bash
     strategy:
       matrix:
         include:
@@ -38,7 +39,6 @@ jobs:
         env:
           BUILD_SCRIPT: ${{ matrix.build_cmd }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
         run: npm run build:$BUILD_SCRIPT
       - uses: actions/upload-artifact@v7
         with:

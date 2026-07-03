@@ -28,6 +28,11 @@ jobs:
           path: ./career-assistant
       - uses: actions/setup-node@v6
         with: { node-version: 22 }
+      - name: Sync package.json version from tag
+        run: |
+          VERSION=$(echo "${{ github.event.client_payload.version }}" | sed 's/^v//')
+          echo "Setting package.json version to $VERSION"
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
       - run: npm ci
       - name: Build
         env:

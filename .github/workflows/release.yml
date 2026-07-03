@@ -1,0 +1,46 @@
+name: Build and release
+on:
+  repository_dispatch:
+    types: [electron-release]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v6
+        with:
+          repository: shunliz/career-assistant
+          token: ${{ secrets.MAIN_REPO_TOKEN }}
+          ref: ${{ github.event.client-payload.version }}
+          path: ./career-assistant
+      - uses: actions/setup-node@v6
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npm run build:${{ matrix.os == 'windows-latest' && 'win' || 'mac' }}
+        env: { GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} }
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-${{ matrix.os }}
+          path: ./career-assistant/dist/**
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with: { path: ./dist }
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.client-payload.version }}
+          draft: false
+          files: |
+            dist/**/career-assistant-*.exe
+            dist/**/career-assistant-*.dmg
+            dist/**/latest-mac.yml
+            dist/**/latest-windows.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
